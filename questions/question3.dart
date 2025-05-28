@@ -6,5 +6,5 @@ void main() {
   print(x);               
 
   x = [1, 2, 3];          
-  print(x);               
+  print(x); //dynamic is flexible it can be any type              
 }
