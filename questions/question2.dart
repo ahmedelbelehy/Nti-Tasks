@@ -1,5 +1,5 @@
 void main() {
-  var name = 'Ahmed';     tring
+  var name = 'Ahmed';    
   var age = 25;         
   var isStudent = true;   
 
