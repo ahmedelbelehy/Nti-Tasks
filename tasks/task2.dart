@@ -26,5 +26,5 @@ void main() {
 
   // age1 = 20;
 
-  print("final Value is assigned once; can be determined at runtime.\nconst Value is a compile-time constant (assigned once) and ensures deep immutability for objects/collections.");
+  print("final Value is assigned once; can be determined at runtime.\nconst Value is a compile-time component (assigned once) and ensures deep immutability for objects/collections.");
 }
