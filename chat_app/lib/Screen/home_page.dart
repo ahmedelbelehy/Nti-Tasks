@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // 📂 Filter Tabs
+          
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
             child: Row(
@@ -122,7 +122,7 @@ class _HomePageState extends State<HomePage> {
 
           const SizedBox(height: 20),
 
-          // 👤 Contacts List
+          
           Expanded(
             child: ListView.builder(
               itemCount: contacts.length,
@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          // 🟩 Bottom Custom Tab Bar (Empty)
+          
           const CustomTabBar(),
         ],
       ),
