@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter/material.dart';
-
-class CustomTabBar extends StatelessWidget {
+class CustomTabBar extends StatefulWidget {
   const CustomTabBar({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 70,
-      decoration: const BoxDecoration(
-        color: Colors.black,
-        border: Border(top: BorderSide(color: Colors.grey, width: 0.3)),
-      ),
+  State<CustomTabBar> createState() => _CustomTabBarState();
+}
 
-      child: const Center(child: SizedBox.shrink()),
+class _CustomTabBarState extends State<CustomTabBar> {
+  int selectedIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      iconSize: 25,
+      selectedFontSize: 15,
+      unselectedFontSize: 10,
+      type: BottomNavigationBarType.fixed,
+      currentIndex: selectedIndex,
+      onTap: (index) {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+
+      items: [
+        BottomNavigationBarItem(icon: Icon(Icons.update), label: "Updates"),
+        BottomNavigationBarItem(icon: Icon(Icons.phone), label: "Call"),
+        BottomNavigationBarItem(icon: Icon(Icons.groups), label: "Communities"),
+        BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Chats"),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Setting"),
+      ],
     );
   }
 }
