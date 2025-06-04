@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:my_task/screen/home_page.dart';
-import 'package:my_task/screen/login.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final nameController = TextEditingController();
-  final nationalIdController = TextEditingController();
-  final phoneController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -24,7 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Sign Up',
+          'Log In',
           style: TextStyle(color: Color.fromARGB(255, 35, 34, 34)),
         ),
         backgroundColor: Colors.white,
@@ -45,59 +40,28 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Create Account",
+                  "Welcome Back",
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 40),
 
                 _buildTextField(
-                  controller: nameController,
-                  label: "Name",
-                  validator:
-                      (value) =>
-                          value!.length < 3
-                              ? 'Enter at least 3 characters'
-                              : null,
-                ),
-
-                _buildTextField(
-                  controller: nationalIdController,
-                  label: "National ID",
-                  keyboardType: TextInputType.number,
-                  validator:
-                      (value) =>
-                          value!.length != 14 ? 'Must be 14 digits' : null,
-                ),
-
-                _buildTextField(
-                  controller: phoneController,
-                  label: "Phone",
-                  keyboardType: TextInputType.phone,
-                  validator:
-                      (value) =>
-                          value!.length != 11 ? 'Must be 11 digits' : null,
-                ),
-
-                _buildTextField(
                   controller: emailController,
                   label: "Email",
                   keyboardType: TextInputType.emailAddress,
-                  validator:
-                      (value) =>
-                          !RegExp(
-                                r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-                              ).hasMatch(value!)
-                              ? 'Enter a valid email'
-                              : null,
+                  validator: (value) => !RegExp(
+                            r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
+                          ).hasMatch(value!)
+                      ? 'Enter a valid email'
+                      : null,
                 ),
 
                 _buildTextField(
                   controller: passwordController,
                   label: "Password",
                   obscureText: true,
-                  validator:
-                      (value) =>
-                          value!.length < 8 ? 'At least 8 characters' : null,
+                  validator: (value) =>
+                      value!.length < 8 ? 'At least 8 characters' : null,
                 ),
 
                 const SizedBox(height: 30),
@@ -118,19 +82,9 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HomePage(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(fontSize: 16),
-                      ),
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(fontSize: 16),
                     ),
                   ),
                 ),
@@ -140,18 +94,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("already have an account? "),
+                    const Text("Don't have an account? "),
                     GestureDetector(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
+                        // روح لصفحة SignUp
                       },
                       child: const Text(
-                        "Log in",
+                        "Sign up",
                         style: TextStyle(
                           color: Color.fromARGB(255, 46, 10, 46),
                           fontWeight: FontWeight.bold,
