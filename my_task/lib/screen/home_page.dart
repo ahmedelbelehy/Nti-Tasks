@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:my_task/screen/product_page.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
@@ -74,49 +74,60 @@ class HomePage extends StatelessWidget {
           ),
           itemBuilder: (context, index) {
             final product = products[index];
-            return Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      product['title'] ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProductDetailsPage(product: product),
+                  ),
+                );
+              },
+
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        product['title'] ?? '',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: Image.network(
-                        product['image'] ?? '',
-                        height: 100,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                      const SizedBox(height: 6),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          product['image'] ?? '',
+                          height: 100,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      product['description'] ?? '',
-                      style: const TextStyle(fontSize: 12),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const Spacer(),
-                    Text(
-                      '${product['price']} \Egp',
-                      style: const TextStyle(
-                        color: Color.fromARGB(250, 0, 0, 0),
-                        fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                      Text(
+                        product['description'] ?? '',
+                        style: const TextStyle(fontSize: 12),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                      const Spacer(),
+                      Text(
+                        '${product['price']} \Egp',
+                        style: const TextStyle(
+                          color: Color.fromARGB(250, 0, 0, 0),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             );
