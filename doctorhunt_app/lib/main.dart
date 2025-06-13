@@ -1,6 +1,9 @@
 import 'package:doctorhunt_app/ui/screen/data/chatdoctor.dart';
 import 'package:doctorhunt_app/ui/screen/data/finddoctor.dart';
 import 'package:doctorhunt_app/ui/screen/data/home_page.dart';
+import 'package:doctorhunt_app/ui/screen/onboarding/onboarding2_page.dart';
+import 'package:doctorhunt_app/ui/screen/onboarding/onboarding3.dart';
+import 'package:doctorhunt_app/ui/screen/onboarding/onboarding_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -16,7 +19,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home:  FindDoctorsPage(),
+      home: OnboardingPage3(),
     );
   }
 }

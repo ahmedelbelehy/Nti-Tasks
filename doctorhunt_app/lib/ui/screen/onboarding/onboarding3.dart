@@ -15,7 +15,7 @@ class OnboardingPage3 extends StatelessWidget {
             top: -20,
             left: -104,
             child: Image.asset(
-              'assets/images/Ellipse 153.png',
+              'assets/images/Ellipse 153 (1).png',
               width: 342,
               height: 342,
               fit: BoxFit.cover,
@@ -32,7 +32,7 @@ class OnboardingPage3 extends StatelessWidget {
 
                   ClipOval(
                     child: Image.asset(
-                      'assets/images/50b88cf395b66159601e5282e97bd25a62818e2a.jpg',
+                      'assets/images/do.jpg',
                       width: 336,
                       height: 336,
                       fit: BoxFit.cover,
