@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DoctorChatScreen extends StatefulWidget {
-  final String backgroundImageUrl;
-  const DoctorChatScreen({super.key, required this.backgroundImageUrl});
+  const DoctorChatScreen({super.key, });
 
   @override
   State<DoctorChatScreen> createState() => _DoctorChatScreenState();
@@ -39,7 +38,7 @@ class _DoctorChatScreenState extends State<DoctorChatScreen> {
       body: Stack(
         children: [
           Image.asset(
-            widget.backgroundImageUrl,
+          "assets/images/backchat.jpg",
             fit: BoxFit.cover,
             height: double.infinity,
             width: double.infinity,

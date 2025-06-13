@@ -1,4 +1,5 @@
 import 'package:doctorhunt_app/ui/screen/data/chatdoctor.dart';
+import 'package:doctorhunt_app/ui/screen/data/finddoctor.dart';
 import 'package:doctorhunt_app/ui/screen/data/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const DoctorChatScreen(
-        backgroundImageUrl: "assets/images/backchat.jpg",
-      ),
+      home:  FindDoctorsPage(),
     );
   }
 }
