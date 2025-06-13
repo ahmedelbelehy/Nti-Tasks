@@ -1,0 +1,472 @@
+import 'package:flutter/material.dart';
+
+// --- Model Classes ---
+class TimeSlot {
+  final String time;
+  bool isAvailable;
+
+  TimeSlot({required this.time, this.isAvailable = true});
+}
+
+class DateSlots {
+  final String date;
+  final String displayText;
+  final List<TimeSlot> afternoonSlots;
+  final List<TimeSlot> eveningSlots;
+
+  DateSlots({
+    required this.date,
+    required this.displayText,
+    required this.afternoonSlots,
+    required this.eveningSlots,
+  });
+
+  bool get hasAvailableSlots =>
+      afternoonSlots.any((slot) => slot.isAvailable) ||
+      eveningSlots.any((slot) => slot.isAvailable);
+
+  int get totalAvailableSlots =>
+      afternoonSlots.where((s) => s.isAvailable).length +
+      eveningSlots.where((s) => s.isAvailable).length;
+}
+
+// --- Main Widget ---
+class BookingTime extends StatefulWidget {
+  const BookingTime({super.key});
+
+  @override
+  _BookingTimeState createState() => _BookingTimeState();
+}
+
+class _BookingTimeState extends State<BookingTime> {
+  int _selectedDateIndex = 0;
+  String? _selectedTimeSlot;
+
+  late final List<DateSlots> _dateSlotsList;
+
+  @override
+  void initState() {
+    super.initState();
+    _dateSlotsList = [
+      // Today - No slots available
+      DateSlots(
+        date: 'Today, 23 Feb',
+        displayText: 'Today, 23 Feb',
+        afternoonSlots: [],
+        eveningSlots: [],
+      ),
+      // Tomorrow - Has available slots
+      DateSlots(
+        date: 'Tomorrow, 24 Feb',
+        displayText: 'Tomorrow, 24 Feb',
+        afternoonSlots: [
+          TimeSlot(time: '1:00 PM'),
+          TimeSlot(time: '1:30 PM'),
+          TimeSlot(time: '2:00 PM'),
+          TimeSlot(time: '2:30 PM'),
+          TimeSlot(time: '3:00 PM'),
+          TimeSlot(time: '3:30 PM'),
+          TimeSlot(time: '4:00 PM'),
+        ],
+        eveningSlots: [
+          TimeSlot(time: '5:00 PM'),
+          TimeSlot(time: '5:30 PM'),
+          TimeSlot(time: '6:00 PM'),
+          TimeSlot(time: '6:30 PM'),
+          TimeSlot(time: '7:00 PM'),
+        ],
+      ),
+      // Thursday - Has available slots
+      DateSlots(
+        date: 'Thu, 25 Feb',
+        displayText: 'Thursday, 25 Feb',
+        afternoonSlots: [
+          TimeSlot(time: '2:00 PM'),
+          TimeSlot(time: '2:30 PM'),
+          TimeSlot(time: '3:00 PM'),
+          TimeSlot(time: '4:00 PM'),
+        ],
+        eveningSlots: [
+          TimeSlot(time: '5:00 PM'),
+          TimeSlot(time: '6:00 PM'),
+          TimeSlot(time: '6:30 PM'),
+        ],
+      ),
+    ];
+    // Start with the first day that has slots available
+    _selectedDateIndex = _dateSlotsList.indexWhere((d) => d.hasAvailableSlots);
+    if (_selectedDateIndex == -1) _selectedDateIndex = 0;
+  }
+
+  DateSlots get _currentDateSlots => _dateSlotsList[_selectedDateIndex];
+  bool get _hasAvailableSlots => _currentDateSlots.hasAvailableSlots;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: Container(
+          margin: const EdgeInsets.only(left: 8,right: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade200,
+                blurRadius: 6,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ),
+        title: const Text('Select Time'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      extendBodyBehindAppBar: true,
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              "assets/images/background.jpg",
+            ), // Use your actual background
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              _buildDoctorProfileCard(),
+              const SizedBox(height: 24),
+              _buildDateTabs(),
+              const SizedBox(height: 24),
+              Expanded(
+                child:
+                    _hasAvailableSlots
+                        ? _buildAvailableSlotsContent()
+                        : _buildNoSlotsContent(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDoctorProfileCard() {
+    return Container(
+      height: 88,
+      width: 335,
+      margin: const EdgeInsets.symmetric(horizontal: 10 , vertical: 20),
+      padding: const EdgeInsets.all(6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              'assets/images/backchat.jpg',
+              width: 72,
+              height: 69,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Dr. Shruti Kedia',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Upasana Dental Clinic, Salt Lake',
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: List.generate(5, (index) {
+                  return Icon(
+                    Icons.star,
+                    size: 16,
+                    color: index < 4 ? Colors.amber : Colors.grey[300],
+                  );
+                }),
+              ),
+            ],
+          ),
+          const Icon(Icons.favorite, color: Colors.red, size: 24),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateTabs() {
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        itemCount: _dateSlotsList.length,
+        itemBuilder: (context, index) {
+          final dateSlots = _dateSlotsList[index];
+          final isSelected = _selectedDateIndex == index;
+          final hasSlots = dateSlots.hasAvailableSlots;
+
+          String subtitle =
+              hasSlots
+                  ? '${dateSlots.totalAvailableSlots} slots available'
+                  : 'No slots available';
+
+          return GestureDetector(
+            onTap: () {
+              setState(() {
+                _selectedDateIndex = index;
+                _selectedTimeSlot = null;
+              });
+            },
+            child: Container(
+              height: 60,
+             constraints: BoxConstraints(minWidth: 130 , maxWidth: 150),
+              margin: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+              decoration: BoxDecoration(
+                color: isSelected ? const Color(0xFF00C896) : Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                border: Border.all(
+                  color:
+                      isSelected ? const Color(0xFF00C896) : Colors.grey[300]!,
+                ),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    dateSlots.date,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: isSelected ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color:
+                          isSelected
+                              ? Colors.white.withOpacity(0.9)
+                              : hasSlots
+                              ? const Color(0xFF00C896)
+                              : Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildNoSlotsContent() {
+    int nextAvailableIndex = -1;
+    for (int i = _selectedDateIndex + 1; i < _dateSlotsList.length; i++) {
+      if (_dateSlotsList[i].hasAvailableSlots) {
+        nextAvailableIndex = i;
+        break;
+      }
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          _currentDateSlots.displayText,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'No slots available',
+          style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+        ),
+        const Spacer(),
+        if (nextAvailableIndex != -1) ...[
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _selectedDateIndex = nextAvailableIndex;
+              });
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF00C896),
+              minimumSize: const Size(306, 54),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: Text(
+              'Next availability on ${_dateSlotsList[nextAvailableIndex].date}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'OR',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey,
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+        OutlinedButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Contacting clinic...')),
+            );
+          },
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(306, 54),
+            side: const BorderSide(color: Color(0xFF00C896), width: 1.5),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          child: const Text(
+            'Contact Clinic',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF00C896),
+            ),
+          ),
+        ),
+        const Spacer(),
+      ],
+    );
+  }
+
+  Widget _buildAvailableSlotsContent() {
+    final afternoonSlots = _currentDateSlots.afternoonSlots;
+    final eveningSlots = _currentDateSlots.eveningSlots;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Text(
+              _currentDateSlots.displayText,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w400,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          if (afternoonSlots.isNotEmpty)
+            _buildTimeSlotSection('Afternoon', afternoonSlots),
+          if (eveningSlots.isNotEmpty)
+            _buildTimeSlotSection('Evening', eveningSlots),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeSlotSection(String title, List<TimeSlot> slots) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$title ${slots.length} slots',
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            children: slots.map((slot) => _buildTimeSlot(slot.time)).toList(),
+          ),
+          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTimeSlot(String time) {
+    final isSelected = _selectedTimeSlot == time;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedTimeSlot = time;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF00C896) : Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: isSelected ? const Color(0xFF00C896) : Colors.grey[300]!,
+          ),
+        ),
+        child: Text(
+          time,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: isSelected ? Colors.white : Colors.black87,
+          ),
+        ),
+      ),
+    );
+  }
+}
