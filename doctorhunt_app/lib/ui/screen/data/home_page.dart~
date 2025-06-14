@@ -1,3 +1,5 @@
+import 'package:doctorhunt_app/ui/screen/data/chatdoctor.dart';
+import 'package:doctorhunt_app/ui/screen/data/finddoctor.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -13,7 +15,6 @@ class MyHomePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Header Section
               Container(
                 width: width,
                 padding: const EdgeInsets.symmetric(
@@ -33,27 +34,36 @@ class MyHomePage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Title and avatar
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
+                          children: [
+                            const Text(
                               "Hi Handwerker!",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
                               ),
                             ),
-                            SizedBox(height: 6),
-                            Text(
-                              "Find Your Doctor",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            const SizedBox(height: 6),
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const FindDoctorsPage(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Find Your Doctor",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -67,8 +77,6 @@ class MyHomePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    // Search bar
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 16,
@@ -78,8 +86,8 @@ class MyHomePage extends StatelessWidget {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
-                        children: const [
+                      child: const Row(
+                        children: [
                           Icon(Icons.search, color: Colors.grey),
                           SizedBox(width: 12),
                           Text(
@@ -96,8 +104,6 @@ class MyHomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 20),
-
-              // Live Doctors Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
@@ -119,10 +125,8 @@ class MyHomePage extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: 3,
                         itemBuilder: (context, index) {
-                          // Generate doctor image URL based on index (1 to 3)
-                          String imageUrl =
-                              'assets/images/doctor ${index + 1}.jpg';
-                          return _buildLiveDoctor(imageUrl);
+                          String imageUrl = 'assets/images/doctor_${index + 1}.jpg';
+                          return _LiveDoctorCard(imageUrl: imageUrl);
                         },
                       ),
                     ),
@@ -131,10 +135,8 @@ class MyHomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 24),
-
-              // Categories Section
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -159,16 +161,14 @@ class MyHomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 24),
-
-              // Popular Doctors Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           "Popular Doctor",
                           style: TextStyle(
@@ -188,13 +188,13 @@ class MyHomePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Row(
+                    const Row(
                       children: [
                         Expanded(
                           child: _DoctorCard(
                             name: "Dr. Fillerup Grab",
                             specialty: "Medicine",
-                            image: "assets/images/popular doctor 1.jpg",
+                            image: "assets/images/popular_doctor_1.jpg",
                           ),
                         ),
                         SizedBox(width: 12),
@@ -202,7 +202,7 @@ class MyHomePage extends StatelessWidget {
                           child: _DoctorCard(
                             name: "Dr. Blessing",
                             specialty: "Dentist",
-                            image: "assets/images/popular_doctor 2.jpg",
+                            image: "assets/images/popular_doctor_2.jpg",
                           ),
                         ),
                       ],
@@ -212,16 +212,14 @@ class MyHomePage extends StatelessWidget {
               ),
 
               const SizedBox(height: 24),
-
-              // Feature Doctor Section
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
+                      children: [
                         Text(
                           "Feature Doctor",
                           style: TextStyle(
@@ -241,34 +239,40 @@ class MyHomePage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        _FeatureDoctor(
-                          name: "Dr. Crick",
-                          price: "\$25/hr",
-                          rating: "3.7",
-                          image: "assets/images/feature_doctor 1.jpg",
-                        ),
-                        _FeatureDoctor(
-                          name: "Dr. Strain",
-                          price: "\$22/hr",
-                          rating: "3.0",
-                          image: "assets/images/feature_doctor 2.jpg",
-                        ),
-                        _FeatureDoctor(
-                          name: "Dr. Lachinet",
-                          price: "\$29/hr",
-                          rating: "2.9",
-                          image: "assets/images/feature_doctor 3.jpg",
-                        ),
-                        _FeatureDoctor(
-                          name: "Dr. Crick",
-                          price: "\$25/hr",
-                          rating: "3.7",
-                          image: "assets/images/feature_doctor 1.jpg",
-                        ),
-                      ],
+                    SizedBox(
+                      height: 140,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: const [
+                          _FeatureDoctor(
+                            name: "Dr. Crick",
+                            price: "\$25/hr",
+                            rating: "3.7",
+                            image: "assets/images/feature_doctor_1.jpg",
+                          ),
+                          SizedBox(width: 12),
+                          _FeatureDoctor(
+                            name: "Dr. Strain",
+                            price: "\$22/hr",
+                            rating: "3.0",
+                            image: "assets/images/feature_doctor_2.jpg",
+                          ),
+                          SizedBox(width: 12),
+                          _FeatureDoctor(
+                            name: "Dr. Lachinet",
+                            price: "\$29/hr",
+                            rating: "2.9",
+                            image: "assets/images/feature_doctor_3.jpg",
+                          ),
+                          SizedBox(width: 12),
+                          _FeatureDoctor(
+                            name: "Dr. Crick",
+                            price: "\$25/hr",
+                            rating: "3.7",
+                            image: "assets/images/feature_doctor_1.jpg",
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -279,8 +283,6 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
       ),
-
-      // Bottom Navigation Bar
       bottomNavigationBar: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
@@ -316,47 +318,68 @@ class MyHomePage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildLiveDoctor(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.only(right: 12),
-      width: 117,
-      height: 168,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(image: AssetImage(imageUrl), fit: BoxFit.cover),
-      ),
-      child: Stack(
-        children: [
-          // Play button overlay
-          const Center(
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.black54,
-              child: Icon(Icons.play_arrow, color: Colors.white, size: 20),
-            ),
+class _LiveDoctorCard extends StatelessWidget {
+  final String imageUrl;
+
+  const _LiveDoctorCard({required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const DoctorChatScreen(),
           ),
-          // Live indicator
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(4),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(right: 12),
+        width: 117,
+        height: 168,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          image: DecorationImage(
+            image: AssetImage(imageUrl),
+            fit: BoxFit.cover,
+            onError: (exception, stackTrace) {
+              print('Error loading image: $imageUrl');
+            },
+          ),
+        ),
+        child: Stack(
+          children: [
+            const Center(
+              child: CircleAvatar(
+                radius: 16,
+                backgroundColor: Colors.black54,
+                child: Icon(Icons.play_arrow, color: Colors.white, size: 20),
               ),
-              child: const Text(
-                "LIVE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: const Text(
+                  "LIVE",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -412,14 +435,22 @@ class _DoctorCard extends StatelessWidget {
         children: [
           Expanded(
             child: ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
               ),
-              child: Image.asset(image, fit: BoxFit.cover),
+              child: Image.asset(
+                image,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.person, size: 50, color: Colors.grey),
+                  );
+                },
+              ),
             ),
           ),
-
           const SizedBox(height: 6),
           Text(
             name,
@@ -436,7 +467,7 @@ class _DoctorCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
               5,
-              (index) => const Icon(Icons.star, color: Colors.amber, size: 14),
+                  (index) => const Icon(Icons.star, color: Colors.amber, size: 14),
             ),
           ),
         ],
@@ -481,7 +512,14 @@ class _FeatureDoctor extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CircleAvatar(radius: 30, backgroundImage: AssetImage(image)),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: AssetImage(image),
+                  onBackgroundImageError: (exception, stackTrace) {
+                    print('Error loading feature doctor image: $image');
+                  },
+                  child: const Icon(Icons.person, size: 30, color: Colors.grey),
+                ),
                 Positioned(
                   top: 0,
                   right: 0,
@@ -507,7 +545,10 @@ class _FeatureDoctor extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
             ),
             const SizedBox(height: 4),
-            Text(price, style: const TextStyle(fontSize: 10, color: Colors.grey)),
+            Text(
+              price,
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            ),
             const SizedBox(height: 4),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

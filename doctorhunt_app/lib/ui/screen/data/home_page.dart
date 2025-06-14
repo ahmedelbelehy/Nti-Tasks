@@ -1,3 +1,6 @@
+import 'package:doctorhunt_app/ui/component/common/home_page/widgets/live_doctor_chat.dart';
+import 'package:doctorhunt_app/ui/screen/data/chatdoctor.dart';
+import 'package:doctorhunt_app/ui/screen/data/finddoctor.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatelessWidget {
@@ -39,7 +42,7 @@ class MyHomePage extends StatelessWidget {
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
                               "Hi Handwerker!",
                               style: TextStyle(
@@ -48,12 +51,23 @@ class MyHomePage extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 6),
-                            Text(
-                              "Find Your Doctor",
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                            InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder:
+                                        (context) => const FindDoctorsPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Find Your Doctor",
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ],
@@ -122,7 +136,7 @@ class MyHomePage extends StatelessWidget {
                           // Generate doctor image URL based on index (1 to 3)
                           String imageUrl =
                               'assets/images/doctor ${index + 1}.jpg';
-                          return _buildLiveDoctor(imageUrl);
+                          return LiveDoctorCard(imageUrl: imageUrl);
                         },
                       ),
                     ),
@@ -323,49 +337,7 @@ class MyHomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildLiveDoctor(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.only(right: 12),
-      width: 117,
-      height: 168,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(image: AssetImage(imageUrl), fit: BoxFit.cover),
-      ),
-      child: Stack(
-        children: [
-          // Play button overlay
-          const Center(
-            child: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.black54,
-              child: Icon(Icons.play_arrow, color: Colors.white, size: 20),
-            ),
-          ),
-          // Live indicator
-          Positioned(
-            top: 8,
-            right: 8,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: const Text(
-                "LIVE",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 }
 
 class _CategoryIcon extends StatelessWidget {

@@ -1,0 +1,310 @@
+import 'package:flutter/material.dart';
+
+class FindDoctorsPage extends StatelessWidget {
+  const FindDoctorsPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/images/background.jpg"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Column(
+            children: [
+              AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      )
+                    ]
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                title: const Text(
+                  "Find Doctors",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Dentist',
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: const Icon(Icons.close),
+                    filled: true,
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 0,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              const Expanded(child: DoctorList()),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DoctorList extends StatelessWidget {
+  const DoctorList({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final doctors = [
+      Doctor(
+        "Dr. Shruti Kedia",
+        "Tooths Dentist",
+        "7 Years experience",
+        "assets/images/backchat2.jpg",
+        true,
+        "87%",
+        "69",
+        "10:00 AM",
+      ),
+      Doctor(
+        "Dr. Watamaniuk",
+        "Tooths Dentist",
+        "9 Years experience",
+        "assets/images/poto22.jpg",
+        false,
+        "74%",
+        "78",
+        "12:00 AM",
+      ),
+      Doctor(
+        "Dr. Crownnover",
+        "Tooths Dentist",
+        "5 Years experience",
+        "assets/images/feature_doctor 3.jpg",
+        true,
+        "59%",
+        "86",
+        "11:00 AM",
+      ),
+      Doctor(
+        "Dr. Balestra",
+        "Tooths Dentist",
+        "6 Years experience",
+        "assets/images/backchat2.jpg",
+        false,
+        "72%",
+        "52",
+        "12:00 AM",
+      ),
+    ];
+
+    return ListView.builder(
+      itemCount: doctors.length,
+      itemBuilder: (context, index) {
+        final doc = doctors[index];
+        return DoctorCard(doctor: doc);
+      },
+    );
+  }
+}
+
+class Doctor {
+  final String name;
+  final String specialty;
+  final String experience;
+  final String imagePath;
+  final bool isFavorite;
+  final String rating;
+  final String reviews;
+  final String availableTime;
+
+  Doctor(
+    this.name,
+    this.specialty,
+    this.experience,
+    this.imagePath,
+    this.isFavorite,
+    this.rating,
+    this.reviews,
+    this.availableTime,
+  );
+}
+
+class DoctorCard extends StatelessWidget {
+  final Doctor doctor;
+
+  const DoctorCard({super.key, required this.doctor});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.asset(
+                  doctor.imagePath,
+                  width: 72,
+                  height: 72,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            doctor.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          doctor.isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color: doctor.isFavorite ? Colors.red : Colors.grey,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      doctor.specialty,
+                      style: const TextStyle(
+                        color: Colors.teal,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      doctor.experience,
+                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        const Icon(Icons.circle, size: 8, color: Colors.green),
+                        const SizedBox(width: 4),
+                        Text(
+                          doctor.rating,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          "${doctor.reviews} Patient Stories",
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RichText(
+                text: TextSpan(
+                  text: "Next Available\n",
+                  style: TextStyle(
+                    color: Colors.teal.shade700,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: "${doctor.availableTime} tomorrow",
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, route)
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: const Text("Book Now" , style: TextStyle(color: Colors.white),),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

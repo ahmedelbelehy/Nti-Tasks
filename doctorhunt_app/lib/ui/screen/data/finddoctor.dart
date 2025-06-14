@@ -1,3 +1,4 @@
+import 'package:doctorhunt_app/ui/screen/data/selecttime.dart';
 import 'package:flutter/material.dart';
 
 class FindDoctorsPage extends StatelessWidget {
@@ -22,9 +23,25 @@ class FindDoctorsPage extends StatelessWidget {
                 automaticallyImplyLeading: false,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios),
-                  onPressed: () {},
+                leading: Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade200,
+                        blurRadius: 6,
+                        offset: const Offset(0, 2),
+                      )
+                    ]
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ),
                 title: const Text(
                   "Find Doctors",
@@ -94,7 +111,7 @@ class DoctorList extends StatelessWidget {
         "Dr. Crownnover",
         "Tooths Dentist",
         "5 Years experience",
-        "assets/images/poto33.jpg",
+        "assets/images/feature_doctor 3.jpg",
         true,
         "59%",
         "86",
@@ -270,7 +287,9 @@ class DoctorCard extends StatelessWidget {
                 ),
               ),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const BookingTime()));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.green,
                   padding: const EdgeInsets.symmetric(
@@ -281,7 +300,7 @@ class DoctorCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
-                child: const Text("Book Now"),
+                child: const Text("Book Now" , style: TextStyle(color: Colors.white),),
               ),
             ],
           ),

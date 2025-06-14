@@ -15,7 +15,7 @@ class OnboardingPage3 extends StatelessWidget {
             top: -20,
             left: -104,
             child: Image.asset(
-              'assets/images/Ellipse 153 (1).png',
+              'assets/images/Ellipse 153.png',
               width: 342,
               height: 342,
               fit: BoxFit.cover,
