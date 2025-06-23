@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import '../product_model.dart';
+import '../model/product_model.dart';
 import 'product_grid.dart';
 
-class JeweleryGrid extends StatelessWidget {
+class WomensClothingGrid extends StatelessWidget {
   final List<Product> products;
-  const JeweleryGrid({required this.products, Key? key}) : super(key: key);
+  const WomensClothingGrid({required this.products, super.key});
 
   @override
   Widget build(BuildContext context) {

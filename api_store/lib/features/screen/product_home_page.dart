@@ -1,25 +1,20 @@
 import 'package:flutter/material.dart';
-import '../product_model.dart';
 import '../service/product_service.dart';
-import '../widgets/product_grid.dart';
+import '../model/product_model.dart';
+import '../views/electronics_grid.dart';
+import '../views/jewelery_grid.dart';
+import '../views/mens_clothing_grid.dart';
+import '../views/womens_clothing_grid.dart';
 
 class ProductHomePage extends StatelessWidget {
-  const ProductHomePage({Key? key}) : super(key: key);
+  const ProductHomePage({super.key});
 
   Future<Map<String, List<Product>>> fetchAllProducts() async {
     final service = ProductService();
-    final electronics = await service.fetchProducts(
-      'https://fakestoreapi.com/products/category/electronics',
-    );
-    final jewelery = await service.fetchProducts(
-      'https://fakestoreapi.com/products/category/jewelery',
-    );
-    final mensClothing = await service.fetchProducts(
-      "https://fakestoreapi.com/products/category/men's%20clothing",
-    );
-    final womensClothing = await service.fetchProducts(
-      "https://fakestoreapi.com/products/category/women's%20clothing",
-    );
+    final electronics = await service.fetchProducts('electronics');
+    final jewelery = await service.fetchProducts('jewelery');
+    final mensClothing = await service.fetchProducts("men's%20clothing");
+    final womensClothing = await service.fetchProducts("women's%20clothing");
     return {
       'electronics': electronics,
       'jewelery': jewelery,
@@ -31,6 +26,7 @@ class ProductHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: const Text('products store'),
         centerTitle: true,
@@ -85,10 +81,12 @@ class ProductHomePage extends StatelessWidget {
                       Expanded(
                         child: TabBarView(
                           children: [
-                            ProductGrid(products: data['electronics']!),
-                            ProductGrid(products: data['jewelery']!),
-                            ProductGrid(products: data['mensClothing']!),
-                            ProductGrid(products: data['womensClothing']!),
+                            ElectronicsGrid(products: data['electronics']!),
+                            JeweleryGrid(products: data['jewelery']!),
+                            MensClothingGrid(products: data['mensClothing']!),
+                            WomensClothingGrid(
+                              products: data['womensClothing']!,
+                            ),
                           ],
                         ),
                       ),
