@@ -43,4 +43,15 @@ class FavoriteCubit extends Cubit<FavoriteState> {
       emit(FavoriteError(e.toString()));
     }
   }
+
+  Future<void> removeFromFavorites(String productId) async {
+    emit(FavoriteLoading());
+    try {
+      await favoriteApi.removeFavorite(productId: productId);
+      final favorites = await favoriteApi.fetchFavorites();
+      emit(FavoriteLoaded(favorites));
+    } catch (e) {
+      emit(FavoriteError(e.toString()));
+    }
+  }
 }

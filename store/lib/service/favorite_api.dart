@@ -16,13 +16,21 @@ class FavoriteApi {
     }
   }
 
-  Future<void> addFavorite({
-    required String productId,
-  }) async {
+  Future<void> addFavorite({required String productId}) async {
     final body = {"nationalId": "01009876567876", "productId": productId};
     final response = await dio.post(url, data: body);
     if (response.statusCode != 200 && response.statusCode != 201) {
       throw Exception("Failed to add favorite");
+    }
+  }
+
+  Future<void> removeFavorite({required String productId}) async {
+    final response = await dio.delete(
+      url,
+      data: {"nationalId": "01009876567876", "productId": productId},
+    );
+    if (response.statusCode != 200 && response.statusCode != 204) {
+      throw Exception("Failed to remove favorite");
     }
   }
 }
