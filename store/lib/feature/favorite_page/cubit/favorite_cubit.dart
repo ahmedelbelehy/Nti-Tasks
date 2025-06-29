@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../service/favorite_api.dart';
-import '../modle1/laptop_model.dart';
+import '../services/favorite_api.dart';
+import '../../laptop_page/model/laptop_model.dart';
 
 abstract class FavoriteState {}
 
@@ -19,10 +19,10 @@ class FavoriteError extends FavoriteState {
 }
 
 class FavoriteCubit extends Cubit<FavoriteState> {
-  final FavoriteApi favoriteApi;
-  FavoriteCubit(this.favoriteApi) : super(FavoriteInitial());
+  final FavoriteApi favoriteApi = FavoriteApi();
+  FavoriteCubit() : super(FavoriteInitial());
 
-  void getFavorites(String nationalId) async {
+  void getFavorites() async {
     emit(FavoriteLoading());
     try {
       final favorites = await favoriteApi.fetchFavorites();

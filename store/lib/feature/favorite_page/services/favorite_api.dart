@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:store/modle1/laptop_model.dart';
+import 'package:store/feature/laptop_page/model/laptop_model.dart';
 
 class FavoriteApi {
   final Dio dio = Dio();

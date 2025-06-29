@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../cubit/favorite_cubit.dart';
-import '../../service/favorite_api.dart';
-import '../../ui/pages/laptop_detail_page.dart';
+import '../../../lib/feature/product_details/view/screen/laptop_detail_page.dart';
 
 class FavoritePage extends StatelessWidget {
-  final String nationalId;
-  const FavoritePage({super.key, required this.nationalId});
+  const FavoritePage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => FavoriteCubit(FavoriteApi())..getFavorites(nationalId),
+      create: (_) => FavoriteCubit()..getFavorites(),
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Favorites'),
-          backgroundColor: Colors.indigo,
-        ),
+        
         body: BlocBuilder<FavoriteCubit, FavoriteState>(
           builder: (context, state) {
             if (state is FavoriteLoading) {
@@ -54,8 +49,7 @@ class FavoritePage extends StatelessWidget {
 class FavoriteListItem extends StatelessWidget {
   final dynamic laptop;
   final VoidCallback? onDelete;
-  const FavoriteListItem({Key? key, required this.laptop, this.onDelete})
-    : super(key: key);
+  const FavoriteListItem({super.key, required this.laptop, this.onDelete});
 
   @override
   Widget build(BuildContext context) {

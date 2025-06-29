@@ -1,6 +1,6 @@
 
 
-import 'package:store/modle1/laptop_model.dart';
+import 'package:store/feature/laptop_page/model/laptop_model.dart';
 
 abstract class LaptopState {}
 
