@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/feature/cart_page/view/widget/component/alert_dialog.dart';
-import 'package:store/ui/pages/cart_page.dart';
+import 'package:store/feature/cart_page/view/widget/component/cart_list_item.dart';
 import '../../cubit/cart_cubit.dart';
 
 class CartPage extends StatelessWidget {
@@ -27,13 +27,13 @@ class CartPage extends StatelessWidget {
                 return CartListItem(
                   item: item,
                   onDelete: () => context.read<CartCubit>().removeFromCart(
-                    productId: item.id,
+                  productId: item.id,
                   ),
                   onEdit: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => ShowAlertDialog(item: item),
-                    );
+                  showDialog(
+                    context: context,
+                    builder: (context) => ShowAlertDialog(item: item),
+                  );
                   },
                 );
               },

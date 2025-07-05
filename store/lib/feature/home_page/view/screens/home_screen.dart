@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../laptop_page/view/screens/laptop_page.dart';
 import '../../../cart_page/view/screens/cart_page.dart';
-import '../../../favorite_page/view/screens/favorite_page.dart'; // تأكد من وجود هذه الصفحة
+import '../../../favorite_page/view/screens/favorite_page.dart'; 
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           LaptopPage(),
           CartPage(),
-          FavoritePage(), // تأكد أنك أنشأتها
+          FavoritePage(), 
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

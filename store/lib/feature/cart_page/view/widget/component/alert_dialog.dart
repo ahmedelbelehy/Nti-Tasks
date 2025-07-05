@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/feature/cart_page/cubit/cart_cubit.dart';
 import 'package:store/feature/laptop_page/model/laptop_model.dart';
 
+
+// ignore: must_be_immutable
 class ShowAlertDialog extends StatelessWidget {
-  ShowAlertDialog({super.key, required this.item});
+   ShowAlertDialog({super.key, required this.item});
   final LaptopModel item;
   int quantity = 1;
 
