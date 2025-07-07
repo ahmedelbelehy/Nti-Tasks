@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:store/feature/profile/view/screen/profile.dart';
 
 import '../../../laptop_page/view/screens/laptop_page.dart';
 import '../../../cart_page/view/screens/cart_page.dart';
-import '../../../favorite_page/view/screens/favorite_page.dart'; 
+import '../../../favorite_page/view/screens/favorite_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentIndex = 0;
 
-  final List<String> _titles = ['Laptops', 'My Cart', 'Favorites'];
+  final List<String> _titles = ['Laptops', 'My Cart', 'Favorites', 'Profile'];
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +29,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           LaptopPage(),
           CartPage(),
-          FavoritePage(), 
+          FavoritePage(),
+         
+          Builder(builder: (context) => ProfilePage(token: '')),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        selectedItemColor: Colors.indigo,
+        selectedItemColor: Colors.deepPurple,
+        unselectedItemColor: Colors.grey, 
+        backgroundColor: Colors.white, 
         onTap: (index) {
           setState(() => currentIndex = index);
         },
@@ -47,6 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.favorite),
             label: 'Favorites',
           ),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
     );

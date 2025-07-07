@@ -1,30 +1,30 @@
-class RegisterData {
+class UserModel {
   final String name;
   final String email;
   final String phone;
   final String nationalId;
   final String gender;
-  final String token;
   final String profileImage;
+  final String? token;
 
-  RegisterData({
+  UserModel({
     required this.name,
     required this.email,
     required this.phone,
     required this.nationalId,
     required this.gender,
-    required this.token,
     required this.profileImage,
+    required this.token,
   });
 
-  factory RegisterData.fromJson(Map<String, dynamic> json) {
-    return RegisterData(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      token: json['token'] ?? '',
       name: json['name'] ?? '',
       email: json['email'] ?? '',
       phone: json['phone'] ?? '',
       nationalId: json['national_id'] ?? '',
       gender: json['gender'] ?? '',
-      token: json['token'] ?? '',
       profileImage: json['profile_image'] ?? '',
     );
   }

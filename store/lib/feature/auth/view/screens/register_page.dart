@@ -1,10 +1,12 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/feature/auth/cubit/cubit/auth_cubit.dart';
 import 'package:store/feature/auth/cubit/cubit/auth_state.dart';
-import 'package:store/feature/auth/services/login_api.dart';
-import 'package:store/feature/auth/view/wedget/regester.dart';
+import 'package:store/feature/auth/view/widget/custom_elevated_button.dart';
+import 'package:store/feature/auth/view/widget/custom_email_and_password.dart';
+import 'package:store/feature/auth/view/widget/custom_text_field.dart';
+import 'package:store/feature/auth/view/widget/register.dart';
+import 'package:store/feature/auth/view/widget/show_snackbar.dart';
 import 'package:store/feature/home_page/view/screens/home_screen.dart';
 import 'package:store/feature/auth/view/screens/login.dart';
 
@@ -23,14 +25,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final nationalIdController = TextEditingController();
   final genderController = TextEditingController();
   final passwordController = TextEditingController();
-
-  String? name, email, phone, password, nationalId, gender;
-  File? profileImage;
+  String? profileImageBase64;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(AuthData()),
+      create: (context) => AuthCubit(),
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
@@ -56,17 +56,29 @@ class _RegisterPageState extends State<RegisterPage> {
                   child: BlocListener<AuthCubit, AuthState>(
                     listener: (context, state) {
                       if (state is AuthSuccess) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Registration successful!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
-                        );
-                      } else if (state is RegisterFailure) {
+                        if (state.data.status == "error") {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showCustomSnackBar(
+                              text: state.data.message,
+                              color: Colors.redAccent,
+                            ),
+                          );
+                          return;
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            showCustomSnackBar(
+                              text: 'Registration successful!',
+                              color: Colors.green,
+                            ),
+                          );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const HomeScreen(),
+                            ),
+                          );
+                        }
+                      } else if (state is AuthFailure) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
@@ -82,121 +94,67 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ImagePickerContainer(
-                            onImageSelected: (file) {
+                          ImagePickerWidget(
+                            onImageSelected: (base64) {
                               setState(() {
-                                profileImage = file;
+                                profileImageBase64 = base64;
                               });
                             },
                           ),
                           const SizedBox(height: 24),
-                          TextFormField(
+                          CustomTextField(
                             controller: nameController,
-                            decoration: const InputDecoration(
-                              labelText: 'Name',
-                            ),
+                            label: 'Name',
+                            icon: Icons.person,
                             validator: (v) => v!.isEmpty ? 'Enter name' : null,
                           ),
                           const SizedBox(height: 12),
-                          TextFormField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              labelText: 'Email',
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                            validator: (v) => v!.isEmpty ? 'Enter email' : null,
+                          CustomEmailAndPassword(
+                            emailController: emailController,
+                            passwordController: passwordController,
                           ),
                           const SizedBox(height: 12),
-                          TextFormField(
+                          CustomTextField(
                             controller: phoneController,
-                            decoration: const InputDecoration(
-                              labelText: 'Phone',
-                            ),
+                            label: 'Phone',
+                            icon: Icons.phone,
                             keyboardType: TextInputType.phone,
                             validator: (v) => v!.isEmpty ? 'Enter phone' : null,
                           ),
                           const SizedBox(height: 12),
-                          TextFormField(
+                          CustomTextField(
                             controller: nationalIdController,
-                            decoration: const InputDecoration(
-                              labelText: 'National ID',
-                            ),
+                            label: 'National ID',
+                            icon: Icons.credit_card,
                             validator: (v) => v!.isEmpty ? 'Enter ID' : null,
                           ),
                           const SizedBox(height: 12),
-                          TextFormField(
+                          CustomTextField(
                             controller: genderController,
-                            decoration: const InputDecoration(
-                              labelText: 'Gender',
-                            ),
+                            label: 'Gender',
+                            icon: Icons.wc,
                             validator: (v) =>
                                 v!.isEmpty ? 'Enter gender' : null,
-                          ),
-                          const SizedBox(height: 12),
-                          TextFormField(
-                            controller: passwordController,
-                            decoration: const InputDecoration(
-                              labelText: 'Password',
-                            ),
-                            obscureText: true,
-                            validator: (v) =>
-                                v!.isEmpty ? 'Enter password' : null,
                           ),
                           const SizedBox(height: 24),
                           BlocBuilder<AuthCubit, AuthState>(
                             builder: (context, state) {
-                              return SizedBox(
-                                width: double.infinity,
-                                height: 50,
-                                child: ElevatedButton(
-                                  onPressed: state is RegisterLoading
-                                      ? null
-                                      : () {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            context.read<AuthCubit>().register(
-                                              name: nameController.text,
-                                              email: emailController.text,
-                                              phone: phoneController.text,
-                                              nationalId:
-                                                  nationalIdController.text,
-                                              gender: genderController.text,
-                                              password: passwordController.text,
-                                            );
-                                          }
-                                        },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF6D5BFF),
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                  ),
-                                  child: state is RegisterLoading
-                                      ? const Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            SizedBox(
-                                              width: 20,
-                                              height: 20,
-                                              child: CircularProgressIndicator(
-                                                color: Colors.white,
-                                                strokeWidth: 2,
-                                              ),
-                                            ),
-                                            SizedBox(width: 12),
-                                            Text('Registering...'),
-                                          ],
-                                        )
-                                      : const Text(
-                                          'Register',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                ),
+                              return CustomElevatedButton(
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    context.read<AuthCubit>().register(
+                                      name: nameController.text,
+                                      email: emailController.text,
+                                      phone: phoneController.text,
+                                      nationalId: nationalIdController.text,
+                                      gender: genderController.text,
+                                      password: passwordController.text,
+                                      profileImage: profileImageBase64 ?? '',
+                                    );
+                                  }
+                                },
+                                state: state,
+                                text: 'Register',
                               );
                             },
                           ),

@@ -1,19 +1,19 @@
-import 'package:store/feature/auth/model/register_model.dart';
+import 'package:store/feature/auth/model/response_model.dart';
 
 abstract class AuthState {}
 
-class RegisterInitial extends AuthState {}
+class AuthInitial extends AuthState {}
 
-class RegisterLoading extends AuthState {}
+class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
-  final RegisterData data;
-  
+  final ResponseModel data;
+
   AuthSuccess(this.data);
 }
 
-class RegisterFailure extends AuthState {
+class AuthFailure extends AuthState {
   final String error;
-  
-  RegisterFailure(this.error);
+
+  AuthFailure(this.error);
 }

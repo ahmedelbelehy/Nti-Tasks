@@ -1,50 +1,74 @@
 import 'package:dio/dio.dart';
-import '../model/register_model.dart';
+import 'package:store/core/helper/cash_helper.dart';
+import 'package:store/feature/auth/model/response_model.dart';
 
 class AuthData {
-  Dio dio = Dio();
+  final CashSharedHelper cashHelper = CashSharedHelper();
+  final Dio dio = Dio();
+  final String baseUrl = 'https://elwekala.onrender.com/user';
 
-  Future<RegisterData> register({
+  Future<ResponseModel> register({
     required String name,
     required String email,
     required String phone,
     required String nationalId,
     required String gender,
     required String password,
+    required String profileImage,
   }) async {
-    final response = await dio.post(
-      'https://elwekala.onrender.com/user/register',
-      data: {
-        'name': name,
-        'email': email,
-        'phone': phone,
-        'national_id': nationalId,
-        'gender': gender,
-        'password': password,
-      },
-    );
+    try {
+      final response = await dio.post(
+        '$baseUrl/register',
+        data: {
+          'name': name,
+          'email': email,
+          'phone': phone,
+          'national_id': nationalId,
+          'gender': gender,
+          'password': password,
+          'profile_image': profileImage,
+        },
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final model = ResponseModel.fromJson(data);
 
-    if (response.statusCode == 200) {
-      return RegisterData.fromJson(response.data);
-    } else {
-      throw Exception('Failed to register user');
+        if (model.user?.token != null && model.user!.token!.isNotEmpty) {
+          await cashHelper.saveData(key: "token", value: model.user!.token!);
+        }
+
+        return model;
+      } else {
+        throw Exception('Failed to register: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 
-  Future<RegisterData> login({
+  Future<ResponseModel> login({
     required String email,
     required String password,
   }) async {
-    final response = await dio.post(
-      'https://elwekala.onrender.com/user/login',
-      data: {'email': email, 'password': password},
-    );
+    try {
+      final response = await dio.post(
+        '$baseUrl/login',
+        data: {'email': email, 'password': password},
+      );
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final model = ResponseModel.fromJson(data);
 
-    if (response.statusCode == 200) {
-      final userData = response.data['user'];
-      return RegisterData.fromJson(userData);
-    } else {
-      throw Exception('Failed to login user');
+        if (model.user?.token != null && model.user!.token!.isNotEmpty) {
+          await cashHelper.saveData(key: "token", value: model.user!.token!);
+        }
+
+        return model;
+      } else {
+        throw Exception('Failed to login: ${response.statusCode}');
+      }
+    } catch (e) {
+      rethrow;
     }
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:store/feature/favorite_page/cubit/favorite_cubit.dart';
-import '../../../lib/feature/product_details/view/screen/laptop_detail_page.dart';
+import 'package:store/feature/product_details/view/screen/laptop_detail_page.dart';
 
 class FavoritePage extends StatelessWidget {
   const FavoritePage({super.key});

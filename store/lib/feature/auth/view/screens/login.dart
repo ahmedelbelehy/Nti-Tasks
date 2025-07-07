@@ -1,126 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:store/feature/auth/cubit/cubit/auth_cubit.dart';
+import 'package:store/feature/auth/cubit/cubit/auth_state.dart';
+import 'package:store/feature/auth/view/widget/custom_email_and_password.dart';
+import 'package:store/feature/auth/view/widget/custom_elevated_button.dart';
+import 'package:store/feature/auth/view/widget/show_snackbar.dart';
+import 'package:store/feature/home_page/view/screens/home_screen.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginPage extends StatelessWidget {
+  LoginPage({super.key});
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  bool obscurePassword = true;
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [Color(0xFF6D5BFF), Color(0xFF46C2CB)],
+    return BlocConsumer<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            showCustomSnackBar(text: "Login successful", color: Colors.green),
+          );
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomeScreen()),
+          );
+        } else if (state is AuthFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            showCustomSnackBar(text: state.error, color: Colors.redAccent),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text("Login Page"),
+            backgroundColor: Colors.indigo,
           ),
-        ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Card(
-              elevation: 10,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(28),
+          body: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Color(0xFF6D5BFF), Color(0xFF46C2CB)],
               ),
-              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-              child: Padding(
-                padding: const EdgeInsets.all(28),
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue.shade700,
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      TextFormField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: const Icon(Icons.email),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                        ),
-                        validator: (v) => v!.isEmpty ? 'Enter email' : null,
-                      ),
-                      const SizedBox(height: 20),
-                      TextFormField(
-                        controller: passwordController,
-                        obscureText: obscurePassword,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: const Icon(Icons.lock),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              obscurePassword
-                                  ? Icons.visibility_off
-                                  : Icons.visibility,
+            ),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Card(
+                  elevation: 10,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 32,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(28),
+                    child: Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue.shade700,
                             ),
+                          ),
+                          const SizedBox(height: 32),
+                          CustomEmailAndPassword(
+                            emailController: emailController,
+                            passwordController: passwordController,
+                          ),
+                          const SizedBox(height: 28),
+                          CustomElevatedButton(
+                            text: "Login",
+                            state: state,
                             onPressed: () {
-                              setState(() {
-                                obscurePassword = !obscurePassword;
-                              });
+                              if (formKey.currentState!.validate()) {
+                                context.read<AuthCubit>().login(
+                                  email: emailController.text,
+                                  password: passwordController.text,
+                                );
+                              }
                             },
                           ),
-                        ),
-                        validator: (v) => v!.isEmpty ? 'Enter password' : null,
+                        ],
                       ),
-                      const SizedBox(height: 28),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            backgroundColor: const Color(0xFF6D5BFF),
-                          ),
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                             
-                            }
-                          },
-                          child: const Text(
-                            "Login",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
