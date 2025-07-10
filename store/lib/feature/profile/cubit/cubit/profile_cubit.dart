@@ -4,12 +4,12 @@ import 'package:store/feature/profile/services/profile_services.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
-
-  Future<void> getProfileData() async {
+  final ProfileServices profileServices = ProfileServices();
+  Future<void> getProfile() async {
     emit(ProfileLoading());
     try {
-      final profileData = await ProfileServices().getProfile();
-      emit(ProfileLoaded(profileData));
+      final userData = await profileServices.getProfile();
+      emit(ProfileLoaded(userData));
     } catch (e) {
       emit(ProfileError(e.toString()));
     }

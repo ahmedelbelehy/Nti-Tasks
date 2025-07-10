@@ -4,7 +4,7 @@ import 'package:store/feature/auth/model/response_model.dart';
 import 'package:store/feature/auth/services/login_api.dart';
 
 class AuthCubit extends Cubit<AuthState> {
-  final AuthData authData = AuthData();
+  final AuthApi authData = AuthApi();
 
   AuthCubit() : super(AuthInitial());
 

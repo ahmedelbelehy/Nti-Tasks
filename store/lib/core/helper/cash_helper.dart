@@ -1,17 +1,24 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CashSharedHelper {
-  SharedPreferences? sharedPreferences;
+  static SharedPreferences? prefs;
 
-  init() async {
-    sharedPreferences = await SharedPreferences.getInstance();
+  static Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
-  saveData({required String key, required String value}) async {
-    return await sharedPreferences?.setString(key, value);
+  static Future<bool> saveData({
+    required String key,
+    required String value,
+  }) async {
+    return await prefs!.setString(key, value);
   }
 
-  getData({required String key}) {
-    return sharedPreferences?.getString(key);
+  static String? getData({required String key}) {
+    return prefs!.getString(key);
+  }
+
+  static Future<bool> removeData({required String key}) async {
+    return await prefs!.remove(key);
   }
 }

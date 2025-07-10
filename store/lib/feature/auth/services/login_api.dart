@@ -2,47 +2,53 @@ import 'package:dio/dio.dart';
 import 'package:store/core/helper/cash_helper.dart';
 import 'package:store/feature/auth/model/response_model.dart';
 
-class AuthData {
-  final CashSharedHelper cashHelper = CashSharedHelper();
+class AuthApi {
   final Dio dio = Dio();
-  final String baseUrl = 'https://elwekala.onrender.com/user';
 
   Future<ResponseModel> register({
     required String name,
     required String email,
+    required String password,
     required String phone,
     required String nationalId,
     required String gender,
-    required String password,
     required String profileImage,
   }) async {
     try {
       final response = await dio.post(
-        '$baseUrl/register',
+        "https://elwekala.onrender.com/user/register",
         data: {
-          'name': name,
-          'email': email,
-          'phone': phone,
-          'national_id': nationalId,
-          'gender': gender,
-          'password': password,
-          'profile_image': profileImage,
+          "name": name,
+          "email": email,
+          "password": password,
+          "phone": phone,
+          "nationalId": nationalId,
+          "gender": gender,
+          "profileImage": profileImage,
         },
       );
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final model = ResponseModel.fromJson(data);
 
-        if (model.user?.token != null && model.user!.token!.isNotEmpty) {
-          await cashHelper.saveData(key: "token", value: model.user!.token!);
-        }
+      final data = response.data;
+      final model = ResponseModel.fromJson(data);
 
-        return model;
-      } else {
-        throw Exception('Failed to register: ${response.statusCode}');
+      final token = model.user?.token;
+      if (token != null && token.isNotEmpty) {
+        await CashSharedHelper.saveData(key: "token", value: token);
+        print("Token saved after register: $token");
       }
+
+      return model;
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data is Map<String, dynamic>) {
+        try {
+          return ResponseModel.fromJson(e.response!.data);
+        } catch (_) {
+          throw Exception("Failed to parse error response.");
+        }
+      }
+      throw Exception('Dio error: ${e.message}');
     } catch (e) {
-      rethrow;
+      throw Exception('Unexpected error: $e');
     }
   }
 
@@ -52,23 +58,31 @@ class AuthData {
   }) async {
     try {
       final response = await dio.post(
-        '$baseUrl/login',
-        data: {'email': email, 'password': password},
+        "https://elwekala.onrender.com/user/login",
+        data: {"email": email, "password": password},
       );
-      if (response.statusCode == 200) {
-        final data = response.data;
-        final model = ResponseModel.fromJson(data);
 
-        if (model.user?.token != null && model.user!.token!.isNotEmpty) {
-          await cashHelper.saveData(key: "token", value: model.user!.token!);
-        }
+      final data = response.data;
+      final model = ResponseModel.fromJson(data);
 
-        return model;
-      } else {
-        throw Exception('Failed to login: ${response.statusCode}');
+      final token = model.user?.token;
+      if (token != null && token.isNotEmpty) {
+        await CashSharedHelper.saveData(key: "token", value: token);
+        print("Token saved after login: $token");
       }
+
+      return model;
+    } on DioException catch (e) {
+      if (e.response != null && e.response!.data is Map<String, dynamic>) {
+        try {
+          return ResponseModel.fromJson(e.response!.data);
+        } catch (_) {
+          throw Exception("Failed to parse error response.");
+        }
+      }
+      throw Exception('Dio error: ${e.message}');
     } catch (e) {
-      rethrow;
+      throw Exception('Unexpected error: $e');
     }
   }
 }

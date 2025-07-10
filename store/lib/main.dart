@@ -1,12 +1,14 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:store/core/helper/cash_helper.dart';
-import 'package:store/my_app.dart';
+import 'package:store/splash_screen.dart';
 
 void main() async {
-  final CashSharedHelper cashHelper = CashSharedHelper();
   WidgetsFlutterBinding.ensureInitialized();
 
-  await cashHelper.init();
+  await CashSharedHelper.init();
 
-  runApp(const MyApp());
+  runApp(
+    DevicePreview(enabled: true, builder: (context) => const SplashScreen()),
+  );
 }
