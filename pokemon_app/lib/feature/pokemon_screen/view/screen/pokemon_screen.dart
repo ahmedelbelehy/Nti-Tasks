@@ -7,31 +7,18 @@ import 'package:advice_app/feature/pokemon_screen/view_model/pokemon_state.dart'
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// --- [Dependencies] ---
-// Make sure to import your model and state management files.
-// For example:
-// import 'view_model/pokemon_cubit.dart';
-// import 'view_model/pokemon_state.dart';
-// import 'model/pokemon_model.dart';
-
-
 class PokemonScreen extends StatelessWidget {
-  const PokemonScreen({Key? key}) : super(key: key);
+  const PokemonScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // The Cubit is responsible for fetching the Pokémon data.
       create: (_) => PokemonCubit()..getPokemon(),
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                Color(0xFF1A1A2E),
-                Color(0xFF16213E),
-                Color(0xFF0F3460),
-              ],
+              colors: [Color(0xFF1A1A2E), Color(0xFF16213E), Color(0xFF0F3460)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -50,7 +37,6 @@ class PokemonScreen extends StatelessWidget {
                       } else if (state is PokemonError) {
                         return _buildErrorState(state.message, context);
                       }
-                      // Initial state before any data is loaded
                       return _buildInitialState(context);
                     },
                   ),
@@ -63,7 +49,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the main header for the Pokédex screen.
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.all(24),
@@ -96,10 +81,7 @@ class PokemonScreen extends StatelessWidget {
               ),
               Text(
                 'Discover amazing Pokémon',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.white70),
               ),
             ],
           ),
@@ -108,7 +90,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// UI shown while data is being fetched.
   Widget _buildLoadingState() {
     return Center(
       child: Column(
@@ -129,17 +110,13 @@ class PokemonScreen extends StatelessWidget {
           const SizedBox(height: 24),
           const Text(
             'Searching for Pokémon...',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 16,
-            ),
+            style: TextStyle(color: Colors.white70, fontSize: 16),
           ),
         ],
       ),
     );
   }
 
-  /// The main scrollable view with all Pokémon details.
   Widget _buildPokemonContent(PokemonModel pokemon) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -162,7 +139,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the section for Base Stats.
   Widget _buildStatsSection(PokemonModel pokemon) {
     return _InfoCard(
       title: 'Base Stats',
@@ -172,20 +148,19 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the section for Abilities.
   Widget _buildAbilitiesSection(PokemonModel pokemon) {
     return _InfoCard(
       title: 'Abilities',
       child: Wrap(
         spacing: 12,
         runSpacing: 8,
-        children:
-            pokemon.abilities.map((ability) => _buildAbilityChip(ability)).toList(),
+        children: pokemon.abilities
+            .map((ability) => _buildAbilityChip(ability))
+            .toList(),
       ),
     );
   }
 
-  /// Builds the collapsible section for the list of moves.
   Widget _buildMovesSection(PokemonModel pokemon) {
     return _InfoCard(
       isCollapsible: true,
@@ -203,9 +178,13 @@ class PokemonScreen extends StatelessWidget {
               : 0;
           return ListTile(
             dense: true,
-            title: Text(_capitalize(move.move.name),
-                style: const TextStyle(
-                    color: Colors.white, fontWeight: FontWeight.w600)),
+            title: Text(
+              _capitalize(move.move.name),
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             trailing: Text(
               level > 0 ? 'Lvl $level' : 'TM/Tutor',
               style: const TextStyle(color: Colors.yellowAccent, fontSize: 12),
@@ -216,7 +195,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds the collapsible section for other data like held items and game appearances.
   Widget _buildMiscDetailsSection(PokemonModel pokemon) {
     return _InfoCard(
       isCollapsible: true,
@@ -233,51 +211,66 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Helper to build the list of held items.
   List<Widget> _buildHeldItems(List<HeldItem> items) {
     return [
-      const Text('Held Items',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      const Text(
+        'Held Items',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       const SizedBox(height: 8),
-      ...items.map((item) => ListTile(
-            leading: const Icon(Icons.inventory_2_outlined, color: Colors.white70),
-            title: Text(_capitalize(item.item.name),
-                style: const TextStyle(color: Colors.white)),
-            subtitle: Text(
-                'Rarity: ${item.versionDetails.first.rarity}% in ${_capitalize(item.versionDetails.first.version.name)}',
-                style: const TextStyle(color: Colors.white60)),
-          )),
+      ...items.map(
+        (item) => ListTile(
+          leading: const Icon(
+            Icons.inventory_2_outlined,
+            color: Colors.white70,
+          ),
+          title: Text(
+            _capitalize(item.item.name),
+            style: const TextStyle(color: Colors.white),
+          ),
+          subtitle: Text(
+            'Rarity: ${item.versionDetails.first.rarity}% in ${_capitalize(item.versionDetails.first.version.name)}',
+            style: const TextStyle(color: Colors.white60),
+          ),
+        ),
+      ),
       const SizedBox(height: 16),
     ];
   }
 
-  /// Helper to build the list of game appearances.
   List<Widget> _buildGameIndices(List<GameIndex> indices) {
     return [
-      const Text('Game Appearances',
-          style: TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      const Text(
+        'Game Appearances',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       const SizedBox(height: 8),
       Wrap(
         spacing: 8,
         runSpacing: 4,
-        // Use toSet().toList() to show each game version only once.
         children: indices
-            .map((index) => Chip(
-                  label: Text(_capitalize(index.version.name)),
-                  backgroundColor: Colors.white.withOpacity(0.2),
-                  labelStyle: const TextStyle(color: Colors.white),
-                ))
+            .map(
+              (index) => Chip(
+                label: Text(_capitalize(index.version.name)),
+                backgroundColor: Colors.white.withOpacity(0.2),
+                labelStyle: const TextStyle(color: Colors.white),
+              ),
+            )
             .toSet()
             .toList(),
-      )
+      ),
     ];
   }
 
-  /// Builds a gallery to show all available sprites.
   Widget _buildSpriteGallery(PokemonModel pokemon) {
-    // Flatten all available sprite URLs into a single list, filtering out nulls
     final spriteUrls = [
       pokemon.sprites.frontDefault,
       pokemon.sprites.backDefault,
@@ -319,7 +312,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds a single stat bar with its name, value, and a progress indicator.
   Widget _buildStatBar(StatElement stat) {
     final statName = _capitalize(stat.stat.name.replaceAll('-', ' '));
     final statValue = stat.baseStat;
@@ -335,10 +327,7 @@ class PokemonScreen extends StatelessWidget {
             children: [
               Text(
                 statName,
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 14,
-                ),
+                style: const TextStyle(color: Colors.white70, fontSize: 14),
               ),
               Text(
                 '$statValue',
@@ -354,9 +343,7 @@ class PokemonScreen extends StatelessWidget {
           LinearProgressIndicator(
             value: progress,
             backgroundColor: Colors.white.withOpacity(0.1),
-            valueColor: AlwaysStoppedAnimation<Color>(
-              _getStatColor(progress),
-            ),
+            valueColor: AlwaysStoppedAnimation<Color>(_getStatColor(progress)),
             minHeight: 6,
             borderRadius: BorderRadius.circular(3),
           ),
@@ -365,7 +352,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Builds a styled chip for displaying a Pokémon's ability.
   Widget _buildAbilityChip(AbilityElement ability) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -406,7 +392,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// UI for handling and displaying errors.
   Widget _buildErrorState(String message, BuildContext context) {
     return Center(
       child: Padding(
@@ -439,10 +424,7 @@ class PokemonScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               message,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-              ),
+              style: const TextStyle(color: Colors.white70, fontSize: 14),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
@@ -456,8 +438,10 @@ class PokemonScreen extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32,
+                  vertical: 16,
+                ),
               ),
               child: const Text(
                 'Try Again',
@@ -470,7 +454,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// UI shown before the first data load.
   Widget _buildInitialState(BuildContext context) {
     return Center(
       child: Column(
@@ -501,10 +484,7 @@ class PokemonScreen extends StatelessWidget {
           const SizedBox(height: 8),
           const Text(
             'Tap the button below to start your adventure!',
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.white70, fontSize: 14),
           ),
           const SizedBox(height: 32),
           ElevatedButton(
@@ -517,15 +497,11 @@ class PokemonScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
             ),
             child: const Text(
               'Find Pokémon',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -533,7 +509,6 @@ class PokemonScreen extends StatelessWidget {
     );
   }
 
-  /// Helper function to determine stat bar color.
   Color _getStatColor(double progress) {
     if (progress < 0.3) return Colors.red;
     if (progress < 0.6) return Colors.orange;
@@ -542,9 +517,9 @@ class PokemonScreen extends StatelessWidget {
   }
 }
 
-/// A custom, animated card for displaying the main Pokémon details.
 class _EnhancedPokemonCard extends StatefulWidget {
   final PokemonModel pokemon;
+
   const _EnhancedPokemonCard({required this.pokemon});
 
   @override
@@ -557,57 +532,39 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   late AnimationController _floatingController;
   late Animation<double> _scaleAnimation;
   late Animation<Offset> _slideAnimation;
-  late Animation<double> _rotationAnimation;
   late Animation<double> _floatingAnimation;
 
   @override
   void initState() {
     super.initState();
-
     _mainController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 700),
     );
-
     _floatingController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
+      CurvedAnimation(parent: _mainController, curve: Curves.easeOutBack),
     );
-
-    _scaleAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _mainController,
-      curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
-    ));
-
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 1),
+      begin: const Offset(0, 0.5),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _mainController,
-      curve: const Interval(0.2, 0.8, curve: Curves.easeOutBack),
-    ));
-
-    _rotationAnimation = Tween<double>(
-      begin: 0,
-      end: 1,
-    ).animate(CurvedAnimation(
-      parent: _mainController,
-      curve: const Interval(0.4, 1.0, curve: Curves.easeInOut),
-    ));
-
-    _floatingAnimation = Tween<double>(
-      begin: -10,
-      end: 10,
-    ).animate(CurvedAnimation(
-      parent: _floatingController,
-      curve: Curves.easeInOut,
-    ));
-
+    ).animate(CurvedAnimation(parent: _mainController, curve: Curves.easeOut));
+    _floatingAnimation = Tween<double>(begin: -10, end: 10).animate(
+      CurvedAnimation(parent: _floatingController, curve: Curves.easeInOut),
+    );
     _mainController.forward();
-    _floatingController.repeat(reverse: true);
+  }
+
+  @override
+  void didUpdateWidget(covariant _EnhancedPokemonCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.pokemon.id != widget.pokemon.id) {
+      _mainController.forward(from: 0.0);
+      _floatingController.repeat(reverse: true);
+    }
   }
 
   @override
@@ -620,55 +577,104 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   @override
   Widget build(BuildContext context) {
     final pokemon = widget.pokemon;
-    final primaryType =
-        pokemon.types.isNotEmpty ? pokemon.types.first.type.name : 'normal';
+    final primaryType = pokemon.types.isNotEmpty
+        ? pokemon.types.first.type.name
+        : 'normal';
 
-    return SlideTransition(
-      position: _slideAnimation,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: Container(
-          width: double.infinity,
-          margin: const EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: _getTypeGradient(primaryType),
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(32),
-            boxShadow: [
-              BoxShadow(
-                color: _getTypeColor(primaryType).withOpacity(0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+    return FadeTransition(
+      opacity: _mainController,
+      child: SlideTransition(
+        position: _slideAnimation,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: _getTypeGradient(primaryType),
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Stack(
-            children: [
-              _buildBackgroundPattern(),
-              Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  children: [
-                    _buildPokemonImage(pokemon),
-                    const SizedBox(height: 24),
-                    _buildPokemonInfo(pokemon),
-                    const SizedBox(height: 24),
-                    _buildActionButtons(context),
-                  ],
+              borderRadius: BorderRadius.circular(32),
+              boxShadow: [
+                BoxShadow(
+                  color: _getTypeColor(primaryType).withOpacity(0.3),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
                 ),
-              ),
-            ],
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
+            ),
+            child: Stack(
+              children: [
+                _buildBackgroundPattern(),
+                Padding(
+                  padding: const EdgeInsets.all(
+                    16,
+                  ).copyWith(top: 24, bottom: 24),
+                  child: Column(
+                    children: [
+                      _buildPokemonImageAndNav(pokemon, context),
+                      const SizedBox(height: 16),
+                      _buildPokemonInfo(pokemon),
+                      const SizedBox(height: 24),
+                      _buildActionButtons(context),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildPokemonImageAndNav(PokemonModel pokemon, BuildContext context) {
+    return Row(
+      children: [
+        _NavigationArrow(
+          icon: Icons.arrow_back_ios_new,
+          onPressed: () {
+            context.read<PokemonCubit>().getPreviousPokemon(pokemon.id);
+          },
+        ),
+        Expanded(
+          child: AnimatedBuilder(
+            animation: _floatingController,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _floatingAnimation.value),
+                child: SizedBox(
+                  width: 180,
+                  height: 180,
+                  child: Image.network(
+                    pokemon.sprites.other.officialArtwork.frontDefault ??
+                        pokemon.sprites.frontDefault,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.catching_pokemon,
+                      color: Colors.white,
+                      size: 80,
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+        _NavigationArrow(
+          icon: Icons.arrow_forward_ios,
+          onPressed: () {
+            context.read<PokemonCubit>().getNextPokemon(pokemon.id);
+          },
+        ),
+      ],
     );
   }
 
@@ -705,59 +711,6 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildPokemonImage(PokemonModel pokemon) {
-    return AnimatedBuilder(
-      animation: _floatingController,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(0, _floatingAnimation.value),
-          child: AnimatedBuilder(
-            animation: _rotationAnimation,
-            builder: (context, child) {
-              return Transform.rotate(
-                angle: _rotationAnimation.value * 0.1,
-                child: Container(
-                  width: 180,
-                  height: 180,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 10),
-                      ),
-                    ],
-                  ),
-                  child: ClipOval(
-                    child: Image.network(
-                      pokemon.sprites.other.officialArtwork.frontDefault ??
-                          pokemon.sprites.frontDefault,
-                      fit: BoxFit.contain,
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Icon(
-                          Icons.catching_pokemon,
-                          color: Colors.white,
-                          size: 80,
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
     );
   }
 
@@ -837,9 +790,15 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         _buildStatItem(
-            'Height', '${(pokemon.height / 10).toStringAsFixed(1)}m', Icons.height),
-        _buildStatItem('Weight',
-            '${(pokemon.weight / 10).toStringAsFixed(1)}kg', Icons.fitness_center),
+          'Height',
+          '${(pokemon.height / 10).toStringAsFixed(1)}m',
+          Icons.height,
+        ),
+        _buildStatItem(
+          'Weight',
+          '${(pokemon.weight / 10).toStringAsFixed(1)}kg',
+          Icons.fitness_center,
+        ),
         _buildStatItem('XP', '${pokemon.baseExperience}', Icons.star),
       ],
     );
@@ -848,11 +807,7 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   Widget _buildStatItem(String label, String value, IconData icon) {
     return Column(
       children: [
-        Icon(
-          icon,
-          color: Colors.white.withOpacity(0.8),
-          size: 24,
-        ),
+        Icon(icon, color: Colors.white.withOpacity(0.8), size: 24),
         const SizedBox(height: 4),
         Text(
           value,
@@ -864,10 +819,7 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
         ),
         Text(
           label,
-          style: TextStyle(
-            color: Colors.white.withOpacity(0.8),
-            fontSize: 12,
-          ),
+          style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
         ),
       ],
     );
@@ -878,9 +830,7 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
       children: [
         Expanded(
           child: ElevatedButton(
-            onPressed: () {
-              context.read<PokemonCubit>().getPokemon();
-            },
+            onPressed: () => context.read<PokemonCubit>().getPokemon(),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
@@ -896,11 +846,8 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
                 Icon(Icons.refresh, size: 20),
                 SizedBox(width: 8),
                 Text(
-                  'Find Another',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  'Find Random',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -913,9 +860,7 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
             borderRadius: BorderRadius.circular(20),
           ),
           child: IconButton(
-            onPressed: () {
-              // TODO: Implement favorite functionality
-            },
+            onPressed: () {},
             icon: const Icon(
               Icons.favorite_border,
               color: Colors.white,
@@ -930,13 +875,13 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   List<Color> _getTypeGradient(String type) {
     switch (type.toLowerCase()) {
       case 'fire':
-        return [const Color(0xFFFF6B6B), const Color(0xFFFF8E53)];
+        return [const Color(0xFFF9776E), const Color(0xFFF0483A)];
       case 'water':
-        return [const Color(0xFF4ECDC4), const Color(0xFF44A08D)];
+        return [const Color(0xFF539DFF), const Color(0xFF2A75E8)];
       case 'grass':
-        return [const Color(0xFF56CCF2), const Color(0xFF2F80ED)];
+        return [const Color(0xFF48D0B0), const Color(0xFF16A085)];
       case 'electric':
-        return [const Color(0xFFFFD93D), const Color(0xFF6BCF7F)];
+        return [const Color(0xFFFFD134), const Color(0xFFF7B733)];
       case 'psychic':
         return [const Color(0xFFFF8A80), const Color(0xFFFF80AB)];
       case 'ice':
@@ -955,13 +900,13 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   Color _getTypeColor(String type) {
     switch (type.toLowerCase()) {
       case 'fire':
-        return const Color(0xFFFF6B6B);
+        return const Color(0xFFF0483A);
       case 'water':
-        return const Color(0xFF4ECDC4);
+        return const Color(0xFF2A75E8);
       case 'grass':
-        return const Color(0xFF56CCF2);
+        return const Color(0xFF16A085);
       case 'electric':
-        return const Color(0xFFFFD93D);
+        return const Color(0xFFF7B733);
       case 'psychic':
         return const Color(0xFFFF8A80);
       default:
@@ -970,7 +915,6 @@ class _EnhancedPokemonCardState extends State<_EnhancedPokemonCard>
   }
 }
 
-/// A custom reusable card for displaying sections of information.
 class _InfoCard extends StatelessWidget {
   final String title;
   final Widget child;
@@ -984,7 +928,7 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cardContent = Container(
+    return Container(
       width: double.infinity,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.05),
@@ -993,11 +937,14 @@ class _InfoCard extends StatelessWidget {
       ),
       child: isCollapsible
           ? ExpansionTile(
-              title: Text(title,
-                  style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white)),
+              title: Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
               iconColor: Colors.white,
               collapsedIconColor: Colors.white70,
               childrenPadding: const EdgeInsets.all(16).copyWith(top: 0),
@@ -1022,11 +969,30 @@ class _InfoCard extends StatelessWidget {
               ),
             ),
     );
-
-    return cardContent;
   }
 }
 
-/// Utility function to capitalize the first letter of a string.
+class _NavigationArrow extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onPressed;
+
+  const _NavigationArrow({required this.icon, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.1),
+        shape: BoxShape.circle,
+        border: Border.all(color: Colors.white.withOpacity(0.2)),
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: Colors.white, size: 20),
+        onPressed: onPressed,
+      ),
+    );
+  }
+}
+
 String _capitalize(String s) =>
     s.isNotEmpty ? s[0].toUpperCase() + s.substring(1) : s;

@@ -15,4 +15,25 @@ class PokemonCubit extends Cubit<PokemonState> {
       emit(PokemonError(message: e.toString()));
     }
   }
+
+  Future<void> getPokemonById(int id) async {
+    if (id < 1) return;
+    try {
+      emit(PokemonLoading());
+      final pokemon = await pokemonServices.getPokemonById(id);
+      emit(PokemonLoaded(pokemonModel: pokemon));
+    } catch (e) {
+      emit(PokemonError(message: e.toString()));
+    }
+  }
+
+  void getNextPokemon(int currentId) {
+    getPokemonById(currentId + 1);
+  }
+
+  void getPreviousPokemon(int currentId) {
+    if (currentId > 1) {
+      getPokemonById(currentId - 1);
+    }
+  }
 }
