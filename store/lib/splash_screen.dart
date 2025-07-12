@@ -1,7 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:store/feature/auth/view/screens/login.dart';
+import 'package:store/feature/home_page/view/screens/home_screen.dart';
+import 'package:store/core/helper/cash_helper.dart';
 
-class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
+
+  @override
+  State<SplashScreen> createState() => _SplashScreenState();
+}
+
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    await Future.delayed(const Duration(seconds: 2)); 
+
+    final token = CashSharedHelper.getData(key: 'token');
+
+    if (token != null && token.isNotEmpty) {
+      debugPrint("User is logged in. Token: $token");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } else {
+      debugPrint("User is not logged in.");
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

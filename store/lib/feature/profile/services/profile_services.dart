@@ -1,3 +1,6 @@
+// Updated ProfileServices.dart with correct logic, proper separation of concerns
+// and integration with ProfileCubit where needed
+
 import 'package:dio/dio.dart';
 import 'package:store/core/helper/cash_helper.dart';
 import 'package:store/feature/auth/model/user_model.dart';
@@ -22,12 +25,12 @@ class ProfileServices {
   }
 
   Future<void> updateProfile({
+    required String name,
     required String email,
     required String password,
-    String? name,
-    String? phone,
-    String? gender,
-    String? nationalId,
+    required String phone,
+    required String gender,
+    required String nationalId,
   }) async {
     final token = CashSharedHelper.getData(key: 'token');
 
@@ -35,27 +38,21 @@ class ProfileServices {
       throw Exception("Access token not found");
     }
 
-    final url = 'https://elwekala.onrender.com/user/update';
-
-    final data = <String, dynamic>{'email': email, 'password': password};
-    if (name != null) data['name'] = name;
-    if (phone != null) data['phone'] = phone;
-    if (gender != null) data['gender'] = gender;
-    if (nationalId != null) data['nationalId'] = nationalId;
-
     final response = await dio.put(
-      url,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ),
-      data: data,
+      "https://elwekala.onrender.com/user/update",
+      data: {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "gender": gender,
+        "password": password,
+        "nationalId": nationalId,
+        "token": token,
+      },
     );
 
-    if (response.statusCode != 200) {
-      throw Exception("Update failed: ${response.data.toString()}");
+    if (response.data['status'] != 'success') {
+      throw Exception("Failed to update profile");
     }
   }
 
@@ -66,22 +63,19 @@ class ProfileServices {
       throw Exception("Access token not found");
     }
 
-    final url = 'https://elwekala.onrender.com/user/delete';
-
     final response = await dio.delete(
-      url,
-      options: Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-      ),
+      "https://elwekala.onrender.com/user/delete",
+      data: {
+        "token": token,
+        "email": CashSharedHelper.getData(key: 'email') ?? "",
+      },
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 || response.data['status'] != 'success') {
       throw Exception("Delete failed: ${response.data.toString()}");
     }
 
     await CashSharedHelper.removeData(key: 'token');
+    await CashSharedHelper.removeData(key: 'email');
   }
 }

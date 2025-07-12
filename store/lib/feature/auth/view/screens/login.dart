@@ -6,6 +6,7 @@ import 'package:store/feature/auth/view/widget/custom_email_and_password.dart';
 import 'package:store/feature/auth/view/widget/custom_elevated_button.dart';
 import 'package:store/feature/auth/view/widget/show_snackbar.dart';
 import 'package:store/feature/home_page/view/screens/home_screen.dart';
+import 'package:store/feature/auth/view/screens/register_page.dart';
 
 class LoginPage extends StatelessWidget {
   LoginPage({super.key});
@@ -90,6 +91,33 @@ class LoginPage extends StatelessWidget {
                                 );
                               }
                             },
+                          ),
+                          const SizedBox(height: 16),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Don't have an account?",
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => const RegisterPage(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  'Register',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
